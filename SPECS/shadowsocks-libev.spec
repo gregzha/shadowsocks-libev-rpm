@@ -25,7 +25,9 @@ autoreconf -fiv
 %configure --prefix=/usr \
            --sysconfdir=/etc/shadowsocks-libev \
            --with-mbedtls \
-           --libdir=%{_libdir}
+           --libdir=%{_libdir} \
+           --enable-shared \
+           --disable-static
 make -j$(nproc)
 
 %install
