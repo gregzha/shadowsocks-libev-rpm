@@ -25,15 +25,11 @@ jobs:
         run: |
           dnf install -y epel-release
 
-      - name: Install PCRE2 dependencies
-        run: |
-          dnf install -y pcre2 pcre2-devel
-
       - name: Install build dependencies
         run: |
           dnf install -y rpm-build git wget autoconf automake libtool \
             pkgconfig asciidoc xmlto libev-devel mbedtls-devel libsodium-devel \
-            c-ares-devel pcre2-devel systemd-devel make gcc
+            c-ares-devel pcre-devel systemd-devel make gcc
 
       - name: Prepare rpmbuild environment
         run: |
