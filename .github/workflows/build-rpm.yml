@@ -25,6 +25,10 @@ jobs:
         run: |
           dnf install -y epel-release
 
+      - name: Install PCRE dependencies
+        run: |
+          dnf install -y pcre2 pcre2-devel
+
       - name: Install build dependencies
         run: |
           dnf install -y rpm-build git wget autoconf automake libtool \
