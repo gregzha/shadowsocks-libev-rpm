@@ -17,7 +17,7 @@ shadowsocks-libev is a lightweight secured socks5 proxy powered by libev.
 %prep
 %autosetup -n %{name}-%{version}
 # Fix broken libtool detection
-sed -i 's/^LT_INIT.*/LT_INIT([disable-static])/' configure.ac
+sed -i 's/^LT_INIT.*/LT_INIT([disable-static,shared])/' configure.ac
 
 %build
 autoreconf -fiv
@@ -25,9 +25,7 @@ autoreconf -fiv
            --sysconfdir=/etc/shadowsocks-libev \
            --with-mbedtls \
            --with-pcre=/usr \
-           --libdir=%{_libdir} \
-           --disable-static \
-           --enable-shared
+           --libdir=%{_libdir}
 make -j$(nproc)
 
 %install
