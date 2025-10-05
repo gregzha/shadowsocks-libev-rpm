@@ -29,19 +29,15 @@ jobs:
         run: |
           dnf install -y rpm-build git wget autoconf automake libtool \
             pkgconfig asciidoc xmlto libev-devel mbedtls-devel libsodium-devel \
-            c-ares-devel pcre-devel systemd-devel make gcc
+            c-ares-devel pcre2-devel systemd-devel make gcc
 
       - name: Prepare rpmbuild environment
         run: |
           mkdir -p ~/rpmbuild/{SPECS,SOURCES,BUILD,RPMS,SRPMS}
           cp SPECS/shadowsocks-libev.spec ~/rpmbuild/SPECS/
           cp SOURCES/shadowsocks-libev.service ~/rpmbuild/SOURCES/
+          cp SOURCES/shadowsocks-libev-3.3.5-fixed.tar.gz ~/rpmbuild/SOURCES/
 
-      - name: Download Shadowsocks-libev source
-        run: |
-          cd ~/rpmbuild/SOURCES
-          wget https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.5/shadowsocks-libev-3.3.5.tar.gz
-          
       - name: Build RPM
         run: |
           cd ~/rpmbuild/SPECS
