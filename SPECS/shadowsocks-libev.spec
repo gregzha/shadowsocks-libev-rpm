@@ -8,21 +8,24 @@ URL:            https://github.com/shadowsocks/shadowsocks-libev
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  gcc make autoconf automake libtool pkgconfig asciidoc xmlto
-BuildRequires:  c-ares-devel libev-devel libsodium-devel mbedtls-devel pcre-devel systemd-devel
-Requires:       libsodium mbedtls libev c-ares pcre
+BuildRequires:  c-ares-devel libev-devel libsodium-devel mbedtls-devel pcre2-devel systemd-devel
+Requires:       libsodium mbedtls libev c-ares pcre2
 
 %description
 shadowsocks-libev is a lightweight secured socks5 proxy powered by libev.
 
 %prep
 %autosetup -n %{name}-%{version}
+# Fix broken libtool detection
+sed -i 's/^LT_INIT.*/LT_INIT([disable-static])/' configure.ac
 
 %build
 autoreconf -fiv
 %configure --prefix=/usr \
            --sysconfdir=/etc/shadowsocks-libev \
            --with-mbedtls \
-           --with-pcre=/usr
+           --with-pcre2 \
+           --libdir=%{_libdir}
 make -j$(nproc)
 
 %install
