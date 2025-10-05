@@ -1,0 +1,39 @@
+name: Build Shadowsocks-libev RPM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm build-essential wget git autoconf automake libtool pkg-config asciidoc xmlto
+
+      - name: Prepare rpmbuild environment
+        run: |
+          mkdir -p ~/rpmbuild/{SPECS,SOURCES,BUILD,RPMS,SRPMS}
+          cp SPECS/shadowsocks-libev.spec ~/rpmbuild/SPECS/
+          cp SOURCES/shadowsocks-libev.service ~/rpmbuild/SOURCES/
+
+      - name: Download Shadowsocks-libev source
+        run: |
+          cd ~/rpmbuild/SOURCES
+          wget https://github.com/shadowsocks/shadowsocks-libev/archive/refs/tags/v3.3.5.tar.gz -O shadowsocks-libev-3.3.5.tar.gz
+
+      - name: Build RPM
+        run: |
+          cd ~/rpmbuild/SPECS
+          rpmbuild -ba shadowsocks-libev.spec
+
+      - name: Upload RPM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadowsocks-libev-rpm
+          path: ~/rpmbuild/RPMS/**/*.rpm
