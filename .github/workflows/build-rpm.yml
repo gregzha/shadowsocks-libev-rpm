@@ -40,8 +40,8 @@ jobs:
       - name: Download Shadowsocks-libev source
         run: |
           cd ~/rpmbuild/SOURCES
-          wget https://github.com/shadowsocks/shadowsocks-libev/archive/refs/tags/v3.3.5.tar.gz -O shadowsocks-libev-3.3.5.tar.gz
-
+          wget https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.5/shadowsocks-libev-3.3.5.tar.gz
+          
       - name: Build RPM
         run: |
           cd ~/rpmbuild/SPECS
