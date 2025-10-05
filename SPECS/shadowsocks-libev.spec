@@ -1,11 +1,11 @@
 Name:           shadowsocks-libev
 Version:        3.3.5
 Release:        1%{?dist}
-Summary:        Lightweight tunnel proxy - shadowsocks-libev
+Summary:        Lightweight secured socks5 proxy powered by libev
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/shadowsocks/shadowsocks-libev
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}-fixed.tar.gz
 
 BuildRequires:  gcc make autoconf automake libtool pkgconfig asciidoc xmlto
 BuildRequires:  c-ares-devel libev-devel libsodium-devel mbedtls-devel pcre2-devel systemd-devel
@@ -16,21 +16,25 @@ shadowsocks-libev is a lightweight secured socks5 proxy powered by libev.
 
 %prep
 %autosetup -n %{name}-%{version}
-sed -i 's/^LT_INIT.*/LT_INIT([disable-static,shared])/' configure.ac
-unset LIBTOOL LIBTOOLIZE
 
 %build
 autoreconf -fiv
-%configure --prefix=/usr \
-           --sysconfdir=/etc/shadowsocks-libev \
-           --with-mbedtls
-make -j$(nproc)
+%configure \
+    --enable-shared \
+    --disable-static \
+    --with-mbedtls \
+    --with-pcre2 \
+    --prefix=/usr \
+    --sysconfdir=/etc/shadowsocks-libev \
+    --libdir=%{_libdir}
+make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
-install -d -m 0755 %{buildroot}%{_sysconfdir}
-install -D -m 0644 %{_sourcedir}/shadowsocks-libev.service %{buildroot}/%{_unitdir}/shadowsocks-libev.service
+
+install -D -m 0644 %{_sourcedir}/shadowsocks-libev.service \
+    %{buildroot}%{_unitdir}/shadowsocks-libev.service
 
 %post
 %systemd_post shadowsocks-libev.service
@@ -45,5 +49,4 @@ install -D -m 0644 %{_sourcedir}/shadowsocks-libev.service %{buildroot}/%{_unitd
 %license LICENSE
 %doc README.md
 %{_bindir}/ss-*
-%dir %{_sysconfdir}
 %{_unitdir}/shadowsocks-libev.service

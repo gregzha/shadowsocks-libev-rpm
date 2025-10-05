@@ -16,14 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Enable CRB repository
+      - name: Enable CRB and EPEL
         run: |
-          dnf install -y dnf-plugins-core
+          dnf install -y dnf-plugins-core epel-release
           dnf config-manager --set-enabled crb
-
-      - name: Enable EPEL repository
-        run: |
-          dnf install -y epel-release
 
       - name: Install build dependencies
         run: |
@@ -36,7 +32,7 @@ jobs:
           mkdir -p ~/rpmbuild/{SPECS,SOURCES,BUILD,RPMS,SRPMS}
           cp SPECS/shadowsocks-libev.spec ~/rpmbuild/SPECS/
           cp SOURCES/shadowsocks-libev.service ~/rpmbuild/SOURCES/
-          cp SOURCES/shadowsocks-libev-3.3.5-fixed.tar.gz ~/rpmbuild/SOURCES/shadowsocks-libev-3.3.5.tar.gz
+          cp SOURCES/shadowsocks-libev-3.3.5-fixed.tar.gz ~/rpmbuild/SOURCES/
 
       - name: Build RPM
         run: |
