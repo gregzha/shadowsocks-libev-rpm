@@ -1,4 +1,4 @@
-name: Build Shadowsocks-libev RPM
+name: Build Shadowsocks-libev RPM (CentOS Stream 9)
 
 on:
   workflow_dispatch:
@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: quay.io/centos/centos:stream9
 
     steps:
       - name: Checkout repository
@@ -13,8 +15,11 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y rpm build-essential wget git autoconf automake libtool pkg-config asciidoc xmlto
+          dnf -y install epel-release dnf-plugins-core
+          dnf -y groupinstall "Development Tools"
+          dnf -y install rpm-build git wget autoconf automake libtool pkgconfig \
+            asciidoc xmlto libev-devel mbedtls-devel libsodium-devel c-ares-devel \
+            pcre2-devel systemd-devel make gcc tar
 
       - name: Prepare rpmbuild environment
         run: |
