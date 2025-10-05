@@ -25,11 +25,7 @@ jobs:
         run: |
           dnf install -y epel-release
 
-      - name: Install PCRE dependencies
-        run: |
-          dnf install -y pcre pcre-devel
-
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
           dnf install -y rpm-build git wget autoconf automake libtool \
             pkgconfig asciidoc xmlto libev-devel mbedtls-devel libsodium-devel \
@@ -49,7 +45,7 @@ jobs:
       - name: Build RPM
         run: |
           cd ~/rpmbuild/SPECS
-          rpmbuild -ba shadowsocks-libev.spec --with pcre=/usr
+          rpmbuild -ba shadowsocks-libev.spec
 
       - name: Upload RPM artifact
         uses: actions/upload-artifact@v4

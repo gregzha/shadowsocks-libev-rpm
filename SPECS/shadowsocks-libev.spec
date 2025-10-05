@@ -19,8 +19,11 @@ shadowsocks-libev is a lightweight secured socks5 proxy powered by libev.
 
 %build
 autoreconf -fiv
-./configure --prefix=/usr --sysconfdir=/etc/shadowsocks-libev --with-mbedtls --with-pcre=/usr
-make -j%{_smp_build_nproc}
+%configure --prefix=/usr \
+           --sysconfdir=/etc/shadowsocks-libev \
+           --with-mbedtls \
+           --with-pcre=/usr
+make -j$(nproc)
 
 %install
 rm -rf %{buildroot}
