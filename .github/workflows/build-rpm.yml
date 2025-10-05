@@ -1,6 +1,9 @@
-name: Build Shadowsocks-libev RPM (CentOS Stream 9)
+name: Build Shadowsocks-libev RPM
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -13,13 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Enable CRB repository
+        run: |
+          dnf install -y dnf-plugins-core
+          dnf config-manager --set-enabled crb
+
       - name: Install build dependencies
         run: |
-          dnf -y install epel-release dnf-plugins-core
-          dnf -y groupinstall "Development Tools"
-          dnf -y install rpm-build git wget autoconf automake libtool pkgconfig \
-            asciidoc xmlto libev-devel mbedtls-devel libsodium-devel c-ares-devel \
-            pcre2-devel systemd-devel make gcc tar
+          dnf install -y rpm-build git wget autoconf automake libtool \
+            pkgconfig asciidoc xmlto libev-devel mbedtls-devel libsodium-devel \
+            c-ares-devel pcre2-devel systemd-devel make gcc
 
       - name: Prepare rpmbuild environment
         run: |
