@@ -5,7 +5,7 @@ Summary:        Lightweight tunnel proxy - shadowsocks-libev
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/shadowsocks/shadowsocks-libev
-Source0:        %{name}-%{version}-fixed.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  gcc make autoconf automake libtool pkgconfig asciidoc xmlto
 BuildRequires:  c-ares-devel libev-devel libsodium-devel mbedtls-devel pcre2-devel systemd-devel
@@ -16,15 +16,14 @@ shadowsocks-libev is a lightweight secured socks5 proxy powered by libev.
 
 %prep
 %autosetup -n %{name}-%{version}
-# Fix libtool issues
-sed -i 's/^LT_INIT.*/LT_INIT([disable-static,shared])/' configure.ac || true
+sed -i 's/^LT_INIT.*/LT_INIT([disable-static,shared])/' configure.ac
 unset LIBTOOL LIBTOOLIZE
 
 %build
+autoreconf -fiv
 %configure --prefix=/usr \
            --sysconfdir=/etc/shadowsocks-libev \
-           --with-mbedtls \
-           --libdir=%{_libdir}
+           --with-mbedtls
 make -j$(nproc)
 
 %install
